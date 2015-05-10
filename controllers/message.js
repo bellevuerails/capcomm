@@ -24,7 +24,7 @@ exports.webhook = function(request, response) {
                     return respond('We couldn\'t sign you up - try again.');
 
                 // We're signed up but not subscribed - prompt to subscribe
-                respond('Thanks for contacting us! Text "subscribe" to ' +
+                respond('--- Thanks for contacting us! Text "subscribe" to ' 
                     + 'receive updates via text message.');
             });
         } else {
@@ -66,7 +66,7 @@ exports.webhook = function(request, response) {
             // available commands
 
             var responseMessage = 'You are team number : ' + teamNumber;
-            
+
             // var responseMessage = 'Sorry, we didn\'t understand that. '
             //     + 'available commands are: subscribe or unsubscribe';
 
