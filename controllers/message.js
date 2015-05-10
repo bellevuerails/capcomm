@@ -60,10 +60,15 @@ exports.webhook = function(request, response) {
                 respond(responseMessage);
             });
         } else {
+            var teamNumber = getTeamNumber();
+
             // If we don't recognize the command, text back with the list of
             // available commands
-            var responseMessage = 'Sorry, we didn\'t understand that. '
-                + 'available commands are: subscribe or unsubscribe';
+
+            var responseMessage = 'You are team number : ' + teamNumber;
+            
+            // var responseMessage = 'Sorry, we didn\'t understand that. '
+            //     + 'available commands are: subscribe or unsubscribe';
 
             respond(responseMessage);
         }
@@ -78,6 +83,26 @@ exports.webhook = function(request, response) {
         });
     }
 };
+// Get team number 
+    function getTeamNumber() {
+        // get the text message command sent by the user
+        var msg = request.body.Body || '';
+        msg = msg.toLowerCase().trim();
+
+        var allTheNumbers;
+        var temp = msg.match(/^\d+|\d+\b|\d+(?=\w)/g);
+        // console.log('temp = ' + temp);
+
+        if (temp === null && typeof temp === "object") {
+            return 0;
+        } else {
+            allTheNumbers = temp.map(function (v) {return +v;});
+            // console.log('allTheNumbers = ' + allTheNumbers);            
+        }
+
+        // console.log('first number found was ' + allTheNumbers[0]);
+        return allTheNumbers[0];
+    }
 
 // Handle form submission
 exports.sendMessages = function(request, response) {
