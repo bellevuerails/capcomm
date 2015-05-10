@@ -40,7 +40,7 @@ exports.webhook = function(request, response) {
         var msg = request.body.Body || '';
         msg = msg.toLowerCase().trim();
 
-
+        respond('Got it :' + msg);
 
         // Conditional logic to do different things based on the command from
         // the user
