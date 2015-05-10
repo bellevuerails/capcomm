@@ -24,7 +24,7 @@ exports.webhook = function(request, response) {
                     return respond('We couldn\'t sign you up - try again.');
 
                 // We're signed up but not subscribed - prompt to subscribe
-                respond('--- Thanks for contacting us! Text "subscribe" to ' 
+                respond('Thanks for contacting us! Text "subscribe" to ' 
                     + 'receive updates via text message.');
             });
         } else {
@@ -39,6 +39,9 @@ exports.webhook = function(request, response) {
         // get the text message command sent by the user
         var msg = request.body.Body || '';
         msg = msg.toLowerCase().trim();
+
+        var teamNumber = getTeamNumber();
+
 
         // Conditional logic to do different things based on the command from
         // the user
@@ -60,10 +63,11 @@ exports.webhook = function(request, response) {
                 respond(responseMessage);
             });
         } else {
-            var teamNumber = getTeamNumber();
+
 
             // If we don't recognize the command, text back with the list of
             // available commands
+
 
             var responseMessage = 'You are team number : ' + teamNumber;
 
@@ -102,7 +106,7 @@ exports.webhook = function(request, response) {
 
         // console.log('first number found was ' + allTheNumbers[0]);
         return allTheNumbers[0];
-    }
+    };
 
 // Handle form submission
 exports.sendMessages = function(request, response) {
