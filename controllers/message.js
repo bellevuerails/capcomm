@@ -30,7 +30,7 @@ exports.webhook = function(request, response) {
         } else {
             // For an existing user, process any input message they sent and
             // send back an appropriate message
-            respond('Got it :' + msg);
+            
             processMessage(sub);
         }
     });
@@ -40,7 +40,7 @@ exports.webhook = function(request, response) {
         // get the text message command sent by the user
         var msg = request.body.Body || '';
         msg = msg.toLowerCase().trim();
-
+respond('Got it :' + msg);
 
 
         // Conditional logic to do different things based on the command from
