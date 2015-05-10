@@ -40,7 +40,6 @@ exports.webhook = function(request, response) {
         var msg = request.body.Body || '';
         msg = msg.toLowerCase().trim();
 
-        var teamNumber = getTeamNumber();
 
 
         // Conditional logic to do different things based on the command from
@@ -64,9 +63,10 @@ exports.webhook = function(request, response) {
             });
         } else {
 
-
+            respond('I dont understand your command');
             // If we don't recognize the command, text back with the list of
             // available commands
+            var teamNumber = getTeamNumber();
 
 
             var responseMessage = 'You are team number : ' + teamNumber;
