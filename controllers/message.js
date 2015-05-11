@@ -87,7 +87,7 @@ exports.webhook = function(request, response) {
                 }
                 else
                 {
-                    var responseMessage = 'Please text your team number';
+                    var responseMessage = 'Please text your team number or text "no" to unsubscribe.';
                     
                 }
             }
