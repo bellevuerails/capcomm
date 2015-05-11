@@ -70,7 +70,7 @@ respond('Got it :' + msg);
             //var teamNumber = getTeamNumber();
 
 
-            var responseMessage = 'You are team number : ' + teamNumber;
+            var responseMessage = 'You are team number : ' + msg;
 
             // var responseMessage = 'Sorry, we didn\'t understand that. '
             //     + 'available commands are: subscribe or unsubscribe';
