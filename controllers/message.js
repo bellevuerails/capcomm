@@ -30,7 +30,7 @@ exports.webhook = function(request, response) {
         } else {
             // For an existing user, process any input message they sent and
             // send back an appropriate message
-            
+
             processMessage(sub);
         }
     });
@@ -67,7 +67,7 @@ respond('Got it :' + msg);
             respond('I dont understand your command');
             // If we don't recognize the command, text back with the list of
             // available commands
-            var teamNumber = getTeamNumber();
+            //var teamNumber = getTeamNumber();
 
 
             var responseMessage = 'You are team number : ' + teamNumber;
