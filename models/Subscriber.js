@@ -7,6 +7,7 @@ var client = twilio(config.accountSid, config.authToken);
 
 var SubscriberSchema = new mongoose.Schema({
     phone: String,
+    team: Number,
     subscribed: {
         type: Boolean,
         default: false
@@ -14,20 +15,42 @@ var SubscriberSchema = new mongoose.Schema({
 });
 
 // Static function to send a message to all current subscribers
-SubscriberSchema.statics.sendMessage = function(message, url, callback) {
-    // Find all subscribed users
-    Subscriber.find({
-        subscribed: true
-    }, function(err, docs) {
-        if (err || docs.length == 0) {
-            return callback.call(this, {
-                message: 'Couldn\'t find any subscribers!'
-            });
-        }
+SubscriberSchema.statics.sendMessage = function(teamNumber, message, url, callback) {
+    console.log('=======send message to team number: ' + teamNumber);
 
-        // Otherwise send messages to all subscribers
-        sendMessages(docs);
-    });
+    if(teamNumber > 0)
+    {
+            console.log('*********Send message to team number: ' + teamNumber);
+        // Find one subscriber
+        Subscriber.find({
+            team: teamNumber
+        }, function(err, docs) {
+            if (err || docs.length == 0) {
+                return callback.call(this, {
+                    message: 'Couldn\'t find any subscribers!'
+                });
+            }
+            // Otherwise send messages to all subscribers
+            sendMessages(docs);
+        });
+    }
+    else{
+        
+        //Find all subscribed users
+        Subscriber.find({
+            subscribed: true
+        }, function(err, docs) {
+            if (err || docs.length == 0) {
+                return callback.call(this, {
+                    message: 'Couldn\'t find any subscribers!'
+                });
+            }
+
+            // Otherwise send messages to all subscribers
+            sendMessages(docs);
+        });
+
+    }
 
     // Send messages to all subscribers via Twilio
     function sendMessages(docs) {

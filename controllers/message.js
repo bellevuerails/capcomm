@@ -16,7 +16,8 @@ exports.webhook = function(request, response) {
             // If there's no subscriber associated with this phone number,
             // create one
             var newSubscriber = new Subscriber({
-                phone: phone
+                phone: phone,
+                team:''
             });
 
             newSubscriber.save(function(err, newSub) {
@@ -24,7 +25,7 @@ exports.webhook = function(request, response) {
                     return respond('We couldn\'t sign you up - try again.');
 
                 // We're signed up but not subscribed - prompt to subscribe
-                respond('Thanks for contacting us! Text "subscribe" to ' 
+                respond('Thanks for contacting us! Text "yes" to ' 
                     + 'receive updates via text message.');
             });
         } else {
@@ -40,42 +41,58 @@ exports.webhook = function(request, response) {
         // get the text message command sent by the user
         var msg = request.body.Body || '';
         msg = msg.toLowerCase().trim();
-respond('Got it :' + msg);
+
 
 
         // Conditional logic to do different things based on the command from
         // the user
-        if (msg === 'subscribe' || msg === 'unsubscribe') {
+        if (msg === 'yes' || msg === 'no') {
             // If the user has elected to subscribe for messages, flip the bit
             // and indicate that they have done so.
-            subscriber.subscribed = msg === 'subscribe';
+            subscriber.subscribed = msg === 'yes';
             subscriber.save(function(err) {
                 if (err)
                     return respond('We could not subscribe you - please try '
                         + 'again.');
 
                 // Otherwise, our subscription has been updated
-                var responseMessage = 'You are now subscribed for updates.';
+                var responseMessage = 'You are now subscribed for updates. What team number are you on?';
                 if (!subscriber.subscribed)
-                    responseMessage = 'You have unsubscribed. Text "subscribe"'
+                    responseMessage = 'You have unsubscribed. Text "yes"'
                         + ' to start receiving updates again.';
 
                 respond(responseMessage);
             });
         } else {
 
-            respond('I dont understand your command');
+           // respond('I dont understand your command');
             // If we don't recognize the command, text back with the list of
             // available commands
-            //var teamNumber = getTeamNumber();
+            var teamNumber = getTeamNumber(msg);
 
+            console.log('Here we are : ' + msg);
 
-            var responseMessage = 'You are team number : ' + msg;
-
-            // var responseMessage = 'Sorry, we didn\'t understand that. '
-            //     + 'available commands are: subscribe or unsubscribe';
-
+            if (!subscriber.subscribed){
+                responseMessage = 'You must first text "yes" to subscribe';
+            }
+            else{
+                if(teamNumber != 0){
+                    var responseMessage = 'You are on team number : ' + teamNumber + ' .... Good luck!';                
+                    subscriber.team = teamNumber;
+                    subscriber.save(function (err){
+                        if(err)
+                            return respond('Something wrong. Please try again');
+                        //respond(responseMessage);
+                    });
+                }
+                else
+                {
+                    var responseMessage = 'Please text your team number';
+                    
+                }
+            }
             respond(responseMessage);
+
         }
     }
 
@@ -89,9 +106,9 @@ respond('Got it :' + msg);
     }
 };
 // Get team number 
-    function getTeamNumber() {
+    function getTeamNumber(msg) {
         // get the text message command sent by the user
-        var msg = request.body.Body || '';
+        //var msg = request.body.Body || '';
         msg = msg.toLowerCase().trim();
 
         var allTheNumbers;
@@ -114,9 +131,10 @@ exports.sendMessages = function(request, response) {
     // Get message info from form submission
     var message = request.body.message;
     var imageUrl = request.body.imageUrl;
+    var teamnumber = request.body.teamnumber;
 
     // Use model function to send messages to all subscribers
-    Subscriber.sendMessage(message, imageUrl, function(err) {
+    Subscriber.sendMessage(teamnumber, message, imageUrl, function(err) {
         if (err) {
             request.flash('errors', err.message);
         } else {
